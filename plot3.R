@@ -1,0 +1,17 @@
+library("lubridate")
+library("dplyr")
+data <- read.csv("household_power_consumption.txt",sep=";",na.strings = "?")
+data <- tbl_df(data)
+data <- mutate(data,datetime = paste(Date,Time))
+data$Date <- dmy(data$Date)
+data <- data[which(month(data$Date)==2 & year(data$Date)==2007 & (day(data$Date)==1 |day(data$Date)==2)),]
+data$Time <- hms(data$Time)
+data$datetime <- dmy_hms(data$datetime)
+png(filename = "plot3.png",width = 480, height = 480, units = "px",bg = "white")
+with(data,{
+  plot(datetime,Sub_metering_1, type="l",col="black",ylab="Energy sub metering")
+  lines(datetime,Sub_metering_2,col="red")
+  lines(datetime,Sub_metering_3,col="blue")
+  legend("topright", lwd=1, col = c("black","blue","red"), legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+  })
+dev.off()

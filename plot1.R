@@ -1,0 +1,10 @@
+library("lubridate")
+library("dplyr")
+data <- read.csv("household_power_consumption.txt",sep=";",na.strings = "?")
+data <- tbl_df(data)
+data$Date <- dmy(data$Date)
+data$Time <- hms(data$Time)
+data <- data[which(month(data$Date)==2 & year(data$Date)==2007 & (day(data$Date)==1 |day(data$Date)==2)),]
+png(filename = "plot1.png",width = 480, height = 480, units = "px",bg = "white")
+hist(data$Global_active_power,col="red",main = "Global active power",xlab="Global Active Power (kilowatts)")
+dev.off()
